@@ -636,7 +636,12 @@ namespace Archimedes
             if (!File.Exists(filename))
                 throw new FileNotFoundException($"Cannot locate file!\n\t- {filename}");
 
-            using (MemoryStream stream = new MemoryStream(File.ReadAllBytes(filename)))
+            Read(File.ReadAllBytes(filename));
+        }
+
+        public void Read(byte[] filebytes)
+        {
+            using (MemoryStream stream = new MemoryStream(filebytes))
             {
                 Header.Read(stream);
 
@@ -668,6 +673,7 @@ namespace Archimedes
                     }
                 }
             }
+
         }
 
         /// <summary>
