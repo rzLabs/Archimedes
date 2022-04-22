@@ -224,7 +224,8 @@ namespace Archimedes
             ((ScriptLoaderBase)scriptObj.Options.ScriptLoader).ModulePaths = new string[]
             {
                 $"{curDir}\\Modules\\?",
-                $"{curDir}\\Modules\\?.lua"
+                $"{curDir}\\Modules\\?.lua",
+                $"{curDir}\\Enums\\?.lua"
             };
 
             // declare our globals with Moonsharp interpreter
