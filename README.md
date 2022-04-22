@@ -345,3 +345,7 @@ cells = {
 > **Note:** The example above is from `SkillResource91.lua`
 
 > **Note:** As of the writing of this document there is only one known `SpecialCase`, that is `DOUBLELOOP`
+
+## Example
+
+Refer to [Grimoire.Tabs.Styles.RDB2](https://github.com/rzLabs/Grimoire/blob/master/Tabs/Styles/RDB2.cs)
