@@ -17,9 +17,14 @@ namespace Archimedes
     /// <summary>
     /// Object representing a given structure lua and information regarding it and it's author.
     /// </summary>
-    public class StructureObject : ICloneable
+    public sealed class StructureObject : ICloneable
     {
-        protected Script scriptObj = null;
+        Script scriptObj = null;
+
+        bool useProcessor => scriptObj?.Globals["ProcessRow"] is not null;
+
+        string selectStatement { get; set; }
+
 
         /// <summary>
         /// Path to the structure file set during this objects construction
@@ -69,7 +74,11 @@ namespace Archimedes
         /// <summary>
         /// Encoding which strings will be encoded/decoded
         /// </summary>
-        public Encoding Encoding = Encoding.Default;
+        public Encoding Encoding
+        {
+            get => ByteUtility.Encoding;
+            set => ByteUtility.Encoding = value;
+        }
 
         /// <summary>
         /// Any special case the engine may need to consider
@@ -122,8 +131,6 @@ namespace Archimedes
         /// The amount of rows loaded into this structure object
         /// </summary>
         public int RowCount => (int)Header[CellFlags.RowCount];
-
-        protected internal string selectStatement { get; set; }
 
         /// <summary>
         /// SQL Select statement to be used when loading data for this structure object from a SQL database
@@ -653,6 +660,9 @@ namespace Archimedes
 
                         dataRow.Read(stream, Header);
 
+                        if (useProcessor)
+                            processRow(dataRow, ProcessorMode.Read);
+
                         Rows.Add(dataRow);
                     }
                 }
@@ -691,7 +701,7 @@ namespace Archimedes
                             Stream.Write(buffer, 0, buffer.Length);
 
                             for (int tR = 0; tR < treeRows.Count; tR++)
-                                treeRows[tR].Write(Stream);
+                                treeRows[tR].Write(Stream); // We will never need to process this row
 
                             pVal = cVal;
                         }
@@ -699,7 +709,12 @@ namespace Archimedes
                 }
                 else
                     for (int i = 0; i < rowCount; i++)
+                    {
+                        if (useProcessor)
+                            processRow(Rows[i], ProcessorMode.Write);
+
                         Rows[i].Write(Stream);
+                    }
 
                 using (FileStream fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
                     Stream.WriteTo(fs);
@@ -878,5 +893,7 @@ namespace Archimedes
 
             return cloneStruct;
         }
+
+        void processRow(RowObject rowObj, string mode) => scriptObj.Call("ProcessRow", new object[] { rowObj, mode });
     }
 }
