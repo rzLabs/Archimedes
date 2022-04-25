@@ -431,7 +431,7 @@ namespace Archimedes
                 // Flag will always be the last field
                 int flagsOffset = 3;
 
-                if (objType == typeof(StringCell) || objType == typeof(ByteArrayCell) || objType == typeof(int) && secondaryType == ArcType.TYPE_COPY_INT32)
+                if (objType == typeof(StringCell) || objType == typeof(ByteArrayCell) || objType == typeof(IntCell) && secondaryType == ArcType.TYPE_COPY_INT32)
                     flagsOffset = 4;
                 else if (objType == typeof(ByteCell) && secondaryType == ArcType.TYPE_BIT_FROM_VECTOR)
                     flagsOffset = 5;
