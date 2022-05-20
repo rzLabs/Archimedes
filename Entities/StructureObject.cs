@@ -243,7 +243,7 @@ namespace Archimedes
             Version = new Version(scriptObj.Globals["version"] as string ?? "0.0.0.0");
             Author = scriptObj.Globals["author"] as string ?? "UNDEFINED";
             RDBName = scriptObj.Globals["file_name"] as string;
-            DatabaseName = scriptObj.Globals["database"] as string ?? "Arcadia";
+            DatabaseName = scriptObj.Globals["database"] as string;
             TableName = scriptObj.Globals["table_name"] as string ?? "UNDEFINED";
             SelectStatement = scriptObj.Globals["select_statement"] as string ?? $"SELECT * FROM dbo.{TableName}";
 
@@ -363,7 +363,7 @@ namespace Archimedes
 
                 string name = objData.Get(1).String;
 
-                // Create the object in its derived state (we will box it as cellect for transport)
+                // Create the object in its derived state (we will box it as cellbase for transport)
                 if (objType == typeof(IntCell))
                 {
                     dataObj = new IntCell(name);
